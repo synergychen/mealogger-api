@@ -2,7 +2,7 @@ const Sequelize = require("sequelize")
 
 module.exports = (sequelize) => {
   const MealPlan = sequelize.define(
-    "meal_plans",
+    "meal_plan",
     {
       planned_at: {
         type: Sequelize.DATE,
@@ -10,6 +10,7 @@ module.exports = (sequelize) => {
       },
     },
     {
+      tableName: 'meal_plans',
       underscored: true,
     }
   )

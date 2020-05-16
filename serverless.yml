@@ -44,3 +44,11 @@ functions:
           path: food_categories
           method: get
           cors: true
+  getShoppingList:
+    handler: handler.getShoppingList
+    name: ${self:service}-getShoppingList
+    events:
+      - http:
+          path: shopping_lists/{id}
+          method: get
+          cors: true

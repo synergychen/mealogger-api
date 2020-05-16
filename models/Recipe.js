@@ -2,7 +2,7 @@ const Sequelize = require('sequelize')
 
 module.exports = (sequelize) => {
   const Recipe = sequelize.define(
-    "recipes",
+    "recipe",
     {
       dish_id: {
         type: Sequelize.INTEGER,
@@ -22,6 +22,7 @@ module.exports = (sequelize) => {
       }
     },
     {
+      tableName: 'recipes',
       underscored: true
     }
   )

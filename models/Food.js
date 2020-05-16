@@ -2,7 +2,7 @@ const Sequelize = require('sequelize')
 
 module.exports = (sequelize) => {
   const Food = sequelize.define(
-    "foods",
+    "food",
     {
       name: {
         type: Sequelize.STRING,
@@ -10,6 +10,7 @@ module.exports = (sequelize) => {
       }
     },
     {
+      tableName: 'foods',
       underscored: true
     }
   )
