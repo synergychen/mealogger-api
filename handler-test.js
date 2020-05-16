@@ -1,7 +1,7 @@
 require("dotenv").config()
 const handler = require("./handler")
 
-console.log(handler.getRecipes(
+console.log(handler.getFoods(
   {}, //event
   {}, //content
   function (data, ss) {

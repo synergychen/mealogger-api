@@ -1,20 +1,13 @@
 const connection = require("./db")
+const { successResponse, errorResponse } = require("./handler-helpers")
 
 module.exports.getDishes = async () => {
   try {
     const { Dish } = await connection()
     const dishes = await Dish.findAll()
-    return {
-      statusCode: 200,
-      body: JSON.stringify(dishes),
-    }
+    return successResponse(dishes)
   } catch (err) {
-    console.log(err)
-    return {
-      statusCode: err.statusCode || 500,
-      headers: { "Content-Type": "text/plain" },
-      body: "Could not get dishes",
-    }
+    return errorResponse(err)
   }
 }
 
@@ -22,35 +15,19 @@ module.exports.getRecipes = async () => {
   try {
     const { Recipe } = await connection()
     const recipes = await Recipe.findAll()
-    return {
-      statusCode: 200,
-      body: JSON.stringify(recipes),
-    }
+    return successResponse(recipes)
   } catch (err) {
-    console.log(err)
-    return {
-      statusCode: err.statusCode || 500,
-      headers: { "Content-Type": "text/plain" },
-      body: "Could not get recipes",
-    }
+    return errorResponse(err)
   }
 }
 
 module.exports.getFoods = async () => {
   try {
-    const { Food } = await connection()
-    const foods = await Food.findAll()
-    return {
-      statusCode: 200,
-      body: JSON.stringify(foods),
-    }
+    const { Food, FoodCategory } = await connection()
+    const foods = await Food.findAll({ include: FoodCategory })
+    return successResponse(foods)
   } catch (err) {
-    console.log(err)
-    return {
-      statusCode: err.statusCode || 500,
-      headers: { "Content-Type": "text/plain" },
-      body: "Could not get foods",
-    }
+    return errorResponse(err)
   }
 }
 
@@ -58,16 +35,8 @@ module.exports.getFoodCategories = async () => {
   try {
     const { FoodCategory } = await connection()
     const foodCategories = await FoodCategory.findAll()
-    return {
-      statusCode: 200,
-      body: JSON.stringify(foodCategories),
-    }
+    return successResponse(foodCategories)
   } catch (err) {
-    console.log(err)
-    return {
-      statusCode: err.statusCode || 500,
-      headers: { "Content-Type": "text/plain" },
-      body: "Could not get food categories",
-    }
+    return errorResponse(err)
   }
 }
