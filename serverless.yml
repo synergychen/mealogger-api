@@ -27,6 +27,7 @@ functions:
       - http:
           path: dishes
           method: get
+          cors: true
   getFoods:
     handler: handler.getFoods
     name: ${self:service}-getFoods
@@ -34,6 +35,7 @@ functions:
       - http:
           path: foods
           method: get
+          cors: true
   getFoodCategories:
     handler: handler.getFoodCategories
     name: ${self:service}-getFoodCategories
@@ -41,3 +43,4 @@ functions:
       - http:
           path: food_categories
           method: get
+          cors: true
