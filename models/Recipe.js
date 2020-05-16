@@ -4,18 +4,16 @@ module.exports = (sequelize) => {
   const Recipe = sequelize.define(
     "recipes",
     {
-      dishId: {
+      dish_id: {
         type: Sequelize.INTEGER,
-        field: 'dish_id',
         allowNull: false,
         references: {
           model: 'Dish',
           key: 'id'
         }
       },
-      foodId: {
+      food_id: {
         type: Sequelize.INTEGER,
-        field: 'food_id',
         allowNull: false,
         references: {
           model: 'Food',

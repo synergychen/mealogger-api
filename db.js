@@ -1,5 +1,4 @@
 // Many to many associations: https://lorenstewart.me/2016/09/12/sequelize-table-associations-joins/
-
 const Sequelize = require('sequelize')
 const sequelize = new Sequelize(
   process.env.DB_NAME,
@@ -11,10 +10,6 @@ const sequelize = new Sequelize(
     port: process.env.DB_PORT,
   }
 )
-
-const db = {}
-
-db.sequelize = sequelize
 
 const Food = require('./models/Food')(sequelize)
 const Recipe = require('./models/Recipe')(sequelize)
@@ -32,10 +27,7 @@ Dish.belongsToMany(Food, {
 FoodCategory.hasMany(Food)
 Food.belongsTo(FoodCategory)
 
-db.Food = Food
-db.Recipe = Recipe
-db.Dish = Dish
-db.FoodCategory = FoodCategory
+db = { Food, FoodCategory, Dish, Recipe }
 
 module.exports = async () => {
   if (db.isConnected) {
@@ -43,8 +35,12 @@ module.exports = async () => {
     return db
   }
 
-  await sequelize.authenticate()
-  db.isConnected = true
-  console.log("=> Created a new connection.")
+  try {
+    await sequelize.authenticate()
+    db.isConnected = true
+    console.log("Created a new connection.")
+  } catch (err) {
+    console.log("Failed to create connection.")
+  }
   return db
 }
