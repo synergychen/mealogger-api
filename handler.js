@@ -3,7 +3,16 @@ const { successResponse, errorResponse } = require("./handler-helpers")
 
 module.exports.getRecentMealPlans = async () => {
   try {
+    const today = new Date()
+    const yesterday = new Date(today)
+    const dayBeforeYesterday = new Date(today)
+    yesterday.setDate(yesterday.getDate() - 1)
+    dayBeforeYesterday.setDate(dayBeforeYesterday.getDate() - 2)
+
     const { MealPlan, Dish } = await connection()
+    await MealPlan.findOrCreate({ where: { planned_at: dayBeforeYesterday } })
+    await MealPlan.findOrCreate({ where: { planned_at: yesterday } })
+    await MealPlan.findOrCreate({ where: { planned_at: today } })
     const mealPlans = await MealPlan.findAll({
       include: [Dish],
       limit: 3,
