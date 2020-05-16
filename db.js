@@ -11,11 +11,23 @@ const sequelize = new Sequelize(
   }
 )
 
-const Food = require('./models/Food')(sequelize)
-const Recipe = require('./models/Recipe')(sequelize)
+const MealPlan = require('./models/MealPlan')(sequelize)
+const DishPlan = require('./models/DishPlan')(sequelize)
 const Dish = require('./models/Dish')(sequelize)
+const Recipe = require('./models/Recipe')(sequelize)
+const Food = require('./models/Food')(sequelize)
 const FoodCategory = require('./models/FoodCategory')(sequelize)
 
+// Meal Plan, Dish Plan, Dish
+MealPlan.belongsToMany(Dish, {
+  through: DishPlan,
+  foreignKey: 'meal_plan_id'
+})
+Dish.belongsToMany(MealPlan, {
+  through: DishPlan,
+  foreignKey: 'dish_id'
+})
+// Food, Dish
 Food.belongsToMany(Dish, {
   through: Recipe,
   foreignKey: 'food_id'
@@ -24,10 +36,18 @@ Dish.belongsToMany(Food, {
   through: Recipe,
   foreignKey: 'dish_id'
 })
+// Food, Food Category
 FoodCategory.hasMany(Food)
 Food.belongsTo(FoodCategory)
 
-db = { Food, FoodCategory, Dish, Recipe }
+db = {
+  MealPlan,
+  DishPlan,
+  Dish,
+  Recipe,
+  Food,
+  FoodCategory,
+}
 
 module.exports = async () => {
   if (db.isConnected) {

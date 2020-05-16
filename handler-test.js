@@ -1,7 +1,7 @@
 require("dotenv").config()
 const handler = require("./handler")
 
-console.log(handler.getDishes(
+console.log(handler.getRecentMealPlans(
   {}, //event
   {}, //content
   function (data, ss) {
