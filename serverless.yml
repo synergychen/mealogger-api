@@ -12,6 +12,13 @@ provider:
     DB_HOST: ${self:custom.secrets.DB_HOST}
     DB_PORT: ${self:custom.secrets.DB_PORT}
 functions:
+  getDishes:
+    handler: handler.getDishes
+    name: ${self:service}-getDishes
+    events:
+      - http:
+          path: dishes
+          method: get
   getFoods:
     handler: handler.getFoods
     name: ${self:service}-getFoods

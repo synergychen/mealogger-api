@@ -3,19 +3,14 @@ const { successResponse, errorResponse } = require("./handler-helpers")
 
 module.exports.getDishes = async () => {
   try {
-    const { Dish } = await connection()
-    const dishes = await Dish.findAll()
+    const { Dish, Food } = await connection()
+    const dishes = await Dish.findAll({
+      include: {
+        model: Food,
+        attributes: ['id', 'name']
+      }
+    })
     return successResponse(dishes)
-  } catch (err) {
-    return errorResponse(err)
-  }
-}
-
-module.exports.getRecipes = async () => {
-  try {
-    const { Recipe } = await connection()
-    const recipes = await Recipe.findAll()
-    return successResponse(recipes)
   } catch (err) {
     return errorResponse(err)
   }
