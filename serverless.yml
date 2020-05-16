@@ -12,6 +12,14 @@ provider:
     DB_HOST: ${self:custom.secrets.DB_HOST}
     DB_PORT: ${self:custom.secrets.DB_PORT}
 functions:
+  getRecentMealPlans:
+    handler: handler.getRecentMealPlans
+    name: ${self:service}-getRecentMealPlans
+    events:
+      - http:
+          path: meal_plans/recent
+          method: get
+          cors: true
   getDishes:
     handler: handler.getDishes
     name: ${self:service}-getDishes
