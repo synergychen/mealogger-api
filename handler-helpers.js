@@ -1,3 +1,9 @@
+const headers = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'Content-Type',
+  'Access-Control-Allow-Methods': 'OPTIONS,POST,GET',
+}
+
 module.exports = {
   successResponse: (data) => {
     if (process.env.NODE_ENV !== 'production') {
@@ -5,18 +11,21 @@ module.exports = {
     }
     return {
       statusCode: 200,
-      headers: { 'Access-Control-Allow-Origin': '*' },
+      headers,
       body: JSON.stringify(data),
     }
   },
-  errorResponse: (err) => {
+  errorResponse: (err, event = {}) => {
     if (process.env.NODE_ENV !== 'production') {
       console.log(err)
     }
     return {
       statusCode: err.statusCode || 500,
-      headers: { "Content-Type": "text/plain" },
-      body: "Failed",
+      headers,
+      body: JSON.stringify({
+        event: event,
+        err: err,
+      }),
     }
   },
   mealPlanParser: (mealPlan) => {

@@ -1,7 +1,5 @@
 const connection = require("./db")
-const { successResponse, errorResponse, mealPlanParser } = require("./handler-helpers")
-
-mealPlanParser
+const { successResponse, errorResponse } = require("./handler-helpers")
 
 module.exports.getRecentMealPlans = async () => {
   try {
@@ -23,8 +21,7 @@ module.exports.getRecentMealPlans = async () => {
       limit: 3,
       order: [['planned_at', 'DESC']]
     })
-    const data = mealPlans.map(mealPlan => mealPlanParser(mealPlan)).reverse()
-    return successResponse(data)
+    return successResponse(mealPlans.reverse())
   } catch (err) {
     return errorResponse(err)
   }
@@ -32,11 +29,12 @@ module.exports.getRecentMealPlans = async () => {
 
 module.exports.createDishPlan = async (event) => {
   try {
+    const body = JSON.parse(event.body)
     const { DishPlan } = await connection()
-    const dishPlan = await DishPlan.create(event)
+    const dishPlan = await DishPlan.create(body)
     return successResponse(dishPlan)
   } catch (err) {
-    return errorResponse(err)
+    return errorResponse(err, event)
   }
 }
 
@@ -108,8 +106,7 @@ module.exports.getMealPlansHistory = async () => {
       limit: historyLength,
       order: [['planned_at', 'DESC']]
     })
-    const data = mealPlans.map(mealPlan => mealPlanParser(mealPlan))
-    return successResponse(data)
+    return successResponse(mealPlans)
   } catch (err) {
     return errorResponse(err)
   }

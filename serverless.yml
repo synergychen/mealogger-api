@@ -22,6 +22,7 @@ functions:
       - http:
           path: meal_plans/recent
           method: get
+          cors: true
   getMealPlansHistory:
     handler: handler.getMealPlansHistory
     name: ${self:service}-getMealPlansHistory
