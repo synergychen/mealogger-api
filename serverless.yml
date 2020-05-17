@@ -5,6 +5,8 @@ provider:
   name: aws
   runtime: nodejs12.x
   region: us-east-1
+  httpApi:
+    cors: true
   environment:
     DB_NAME: ${self:custom.secrets.DB_NAME}
     DB_USERNAME: ${self:custom.secrets.DB_USERNAME}
@@ -12,6 +14,7 @@ provider:
     DB_HOST: ${self:custom.secrets.DB_HOST}
     DB_PORT: ${self:custom.secrets.DB_PORT}
 functions:
+  # Meal Plan
   getRecentMealPlans:
     handler: handler.getRecentMealPlans
     name: ${self:service}-getRecentMealPlans
@@ -19,7 +22,24 @@ functions:
       - http:
           path: meal_plans/recent
           method: get
+  getMealPlansHistory:
+    handler: handler.getMealPlansHistory
+    name: ${self:service}-getMealPlansHistory
+    events:
+      - http:
+          path: meal_plans/history
+          method: get
           cors: true
+  # Dish Plan
+  createDishPlan:
+    handler: handler.createDishPlan
+    name: ${self:service}-createDishPlan
+    events:
+      - http:
+          path: dish_plans
+          method: post
+          cors: true
+  # Dish
   getDishes:
     handler: handler.getDishes
     name: ${self:service}-getDishes
@@ -28,6 +48,7 @@ functions:
           path: dishes
           method: get
           cors: true
+  # Food
   getFoods:
     handler: handler.getFoods
     name: ${self:service}-getFoods
@@ -36,6 +57,7 @@ functions:
           path: foods
           method: get
           cors: true
+  # Food Category
   getFoodCategories:
     handler: handler.getFoodCategories
     name: ${self:service}-getFoodCategories
@@ -44,19 +66,12 @@ functions:
           path: food_categories
           method: get
           cors: true
+  # Shopping List
   getShoppingList:
     handler: handler.getShoppingList
     name: ${self:service}-getShoppingList
     events:
       - http:
           path: shopping_lists/{id}
-          method: get
-          cors: true
-  getMealPlansHistory:
-    handler: handler.getMealPlansHistory
-    name: ${self:service}-getMealPlansHistory
-    events:
-      - http:
-          path: meal_plans/history
           method: get
           cors: true

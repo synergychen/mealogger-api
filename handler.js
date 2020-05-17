@@ -30,6 +30,16 @@ module.exports.getRecentMealPlans = async () => {
   }
 }
 
+module.exports.createDishPlan = async (event) => {
+  try {
+    const { DishPlan } = await connection()
+    const dishPlan = await DishPlan.create(event)
+    return successResponse(dishPlan)
+  } catch (err) {
+    return errorResponse(err)
+  }
+}
+
 module.exports.getDishes = async () => {
   try {
     const { Dish, Food } = await connection()
