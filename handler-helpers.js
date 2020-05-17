@@ -18,5 +18,20 @@ module.exports = {
       headers: { "Content-Type": "text/plain" },
       body: "Failed",
     }
+  },
+  mealPlanParser: (mealPlan) => {
+    const meals = ['breakfast', 'lunch', 'dinner']
+    let data = JSON.parse(JSON.stringify(mealPlan))
+    console.log(JSON.stringify(mealPlan))
+    meals.forEach(meal => {
+      const dishes = (data['dishes'] || []).filter(dish => {
+        return dish['dish_plan']['meal'].toLowerCase() === meal
+      })
+      data[meal] = {
+        dishes: dishes,
+        foods: dishes.map(dish => dish['food']).flat()
+      }
+    })
+    return data
   }
 }

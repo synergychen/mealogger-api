@@ -52,3 +52,11 @@ functions:
           path: shopping_lists/{id}
           method: get
           cors: true
+  getMealPlansHistory:
+    handler: handler.getMealPlansHistory
+    name: ${self:service}-getMealPlansHistory
+    events:
+      - http:
+          path: meal_plans/history
+          method: get
+          cors: true

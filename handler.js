@@ -1,5 +1,7 @@
 const connection = require("./db")
-const { successResponse, errorResponse } = require("./handler-helpers")
+const { successResponse, errorResponse, mealPlanParser } = require("./handler-helpers")
+
+mealPlanParser
 
 module.exports.getRecentMealPlans = async () => {
   try {
@@ -21,19 +23,7 @@ module.exports.getRecentMealPlans = async () => {
       limit: 3,
       order: [['planned_at', 'DESC']]
     })
-    let data = JSON.parse(JSON.stringify(mealPlans))
-    data.map(mealPlan => {
-      ['breakfast', 'lunch', 'dinner'].forEach(meal => {
-        const dishes = mealPlan['dishes'].filter(dish => {
-          return dish['dish_plan']['meal'].toLowerCase() === meal
-        })
-        mealPlan[meal] = {
-          dishes: dishes,
-          foods: dishes.map(dish => dish['food']).flat()
-        }
-      })
-      return mealPlan
-    })
+    const data = mealPlans.map(mealPlan => mealPlanParser(mealPlan))
     return successResponse(data)
   } catch (err) {
     return errorResponse(err)
@@ -91,6 +81,25 @@ module.exports.getShoppingList = async (event) => {
       where: { id: event.pathParameters.id },
     })
     return successResponse(shoppingList)
+  } catch (err) {
+    return errorResponse(err)
+  }
+}
+
+module.exports.getMealPlansHistory = async () => {
+  const historyLength = 30
+  try {
+    const { MealPlan, Dish, Food } = await connection()
+    const mealPlans = await MealPlan.findAll({
+      include: {
+        model: Dish,
+        include: Food
+      },
+      limit: historyLength,
+      order: [['planned_at', 'DESC']]
+    })
+    const data = mealPlans.map(mealPlan => mealPlanParser(mealPlan))
+    return successResponse(data)
   } catch (err) {
     return errorResponse(err)
   }
