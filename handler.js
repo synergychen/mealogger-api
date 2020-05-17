@@ -30,9 +30,17 @@ module.exports.getRecentMealPlans = async () => {
 module.exports.createDishPlan = async (event) => {
   try {
     const body = JSON.parse(event.body)
-    const { DishPlan } = await connection()
-    const dishPlan = await DishPlan.create(body)
-    return successResponse(dishPlan)
+    const { MealPlan, DishPlan, Dish, Food } = await connection()
+    await DishPlan.create(body)
+    // Return new mealPlan instead of dish plan for FE
+    const mealPlan = await MealPlan.findOne({
+      include: {
+        model: Dish,
+        include: Food
+      },
+      where: { id: body.meal_plan_id }
+    })
+    return successResponse(mealPlan)
   } catch (err) {
     return errorResponse(err, event)
   }
