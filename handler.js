@@ -23,7 +23,7 @@ module.exports.getRecentMealPlans = async () => {
       limit: 3,
       order: [['planned_at', 'DESC']]
     })
-    const data = mealPlans.map(mealPlan => mealPlanParser(mealPlan))
+    const data = mealPlans.map(mealPlan => mealPlanParser(mealPlan)).reverse()
     return successResponse(data)
   } catch (err) {
     return errorResponse(err)
