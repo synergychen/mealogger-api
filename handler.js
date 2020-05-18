@@ -46,6 +46,18 @@ module.exports.createDishPlan = async (event) => {
   }
 }
 
+module.exports.deleteDishPlan = async (event) => {
+  try {
+    const { DishPlan } = await connection()
+    const deleted = await DishPlan.destroy({
+      where: { id: event.pathParameters.id }
+    })
+    return successResponse({ deleted })
+  } catch (err) {
+    return errorResponse(err, event)
+  }
+}
+
 module.exports.getDishes = async () => {
   try {
     const { Dish, Food } = await connection()

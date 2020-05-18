@@ -40,6 +40,14 @@ functions:
           path: dish_plans
           method: post
           cors: true
+  deleteDishPlan:
+    handler: handler.deleteDishPlan
+    name: ${self:service}-deleteDishPlan
+    events:
+      - http:
+          path: dish_plans/{id}
+          method: delete
+          cors: true
   # Dish
   getDishes:
     handler: handler.getDishes

@@ -1,11 +1,11 @@
 const headers = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'Content-Type',
-  'Access-Control-Allow-Methods': 'OPTIONS,POST,GET',
+  'Access-Control-Allow-Methods': 'OPTIONS,POST,GET,PUT,DELETE',
 }
 
 module.exports = {
-  successResponse: (data) => {
+  successResponse: (data = {}) => {
     if (process.env.NODE_ENV !== 'production') {
       console.log(JSON.stringify(data, null, 2))
     }
@@ -27,20 +27,5 @@ module.exports = {
         err: err,
       }),
     }
-  },
-  mealPlanParser: (mealPlan) => {
-    const meals = ['breakfast', 'lunch', 'dinner']
-    let data = JSON.parse(JSON.stringify(mealPlan))
-    console.log(JSON.stringify(mealPlan))
-    meals.forEach(meal => {
-      const dishes = (data['dishes'] || []).filter(dish => {
-        return dish['dish_plan']['meal'].toLowerCase() === meal
-      })
-      data[meal] = {
-        dishes: dishes,
-        foods: dishes.map(dish => dish['food']).flat()
-      }
-    })
-    return data
   }
 }
