@@ -135,6 +135,18 @@ module.exports.updateFood = async (event) => {
   }
 }
 
+module.exports.deleteFood = async (event) => {
+  try {
+    const { Food } = await connection()
+    const deleted = await Food.destroy({
+      where: { id: event.pathParameters.id }
+    })
+    return successResponse({ deleted })
+  } catch (err) {
+    return errorResponse(err, event)
+  }
+}
+
 module.exports.getFoodCategories = async () => {
   try {
     const { FoodCategory } = await connection()
@@ -142,6 +154,45 @@ module.exports.getFoodCategories = async () => {
     return successResponse(foodCategories)
   } catch (err) {
     return errorResponse(err)
+  }
+}
+
+module.exports.createFoodCategory = async (event) => {
+  try {
+    const { name, color } = JSON.parse(event.body)
+    const { FoodCategory } = await connection()
+    let foodCategory = await FoodCategory.create({ name, color })
+    return successResponse(foodCategory)
+  } catch (err) {
+    return errorResponse(err, event)
+  }
+}
+
+module.exports.updateFoodCategory = async (event) => {
+  try {
+    const { name, color } = JSON.parse(event.body)
+    const { FoodCategory } = await connection()
+    let foodCategory = await FoodCategory.findOne({
+      where: { id: event.pathParameters.id },
+    })
+    foodCategory.name = name
+    foodCategory.color = color
+    await foodCategory.save()
+    return successResponse(foodCategory)
+  } catch (err) {
+    return errorResponse(err, event)
+  }
+}
+
+module.exports.deleteFoodCategory = async (event) => {
+  try {
+    const { FoodCategory } = await connection()
+    const deleted = await FoodCategory.destroy({
+      where: { id: event.pathParameters.id }
+    })
+    return successResponse({ deleted })
+  } catch (err) {
+    return errorResponse(err, event)
   }
 }
 

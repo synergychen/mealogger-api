@@ -2,7 +2,7 @@ require("dotenv").config()
 const handler = require("./handler")
 
 console.log(
-  handler.updateFood(
+  handler.deleteFood(
     {
       body: JSON.stringify({
         name: 'soy',

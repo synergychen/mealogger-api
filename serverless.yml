@@ -90,6 +90,14 @@ functions:
           path: foods/{id}
           method: put
           cors: true
+  deleteFood:
+    handler: handler.deleteFood
+    name: ${self:service}-deleteFood
+    events:
+      - http:
+          path: foods/{id}
+          method: delete
+          cors: true
   # Food Category
   getFoodCategories:
     handler: handler.getFoodCategories
@@ -98,6 +106,30 @@ functions:
       - http:
           path: food_categories
           method: get
+          cors: true
+  createFoodCategory:
+    handler: handler.createFoodCategory
+    name: ${self:service}-createFoodCategory
+    events:
+      - http:
+          path: food_categories
+          method: post
+          cors: true
+  updateFoodCategory:
+    handler: handler.updateFoodCategory
+    name: ${self:service}-updateFoodCategory
+    events:
+      - http:
+          path: food_categories/{id}
+          method: put
+          cors: true
+  deleteFoodCategory:
+    handler: handler.deleteFoodCategory
+    name: ${self:service}-deleteFoodCategory
+    events:
+      - http:
+          path: food_categories/{id}
+          method: delete
           cors: true
   # Shopping List
   getShoppingList:
