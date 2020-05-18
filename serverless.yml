@@ -57,6 +57,14 @@ functions:
           path: dishes
           method: get
           cors: true
+  createDish:
+    handler: handler.createDish
+    name: ${self:service}-createDish
+    events:
+      - http:
+          path: dishes
+          method: post
+          cors: true
   # Food
   getFoods:
     handler: handler.getFoods

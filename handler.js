@@ -62,11 +62,30 @@ module.exports.getDishes = async () => {
   try {
     const { Dish, Food } = await connection()
     const dishes = await Dish.findAll({
-      include: [Food]
+      include: [Food],
+      order: [['updated_at', 'DESC']]
     })
     return successResponse(dishes)
   } catch (err) {
     return errorResponse(err)
+  }
+}
+
+module.exports.createDish = async (event) => {
+  try {
+    const body = JSON.parse(event.body)
+    const { Dish, Recipe, Food } = await connection()
+    let dish = await Dish.create({ name: body.name })
+    await Recipe.bulkCreate(
+      body.foods.map(food_id => ({ food_id, dish_id: dish.id }))
+    )
+    dish = await Dish.findOne({
+      include: [Food],
+      where: { id: dish.id }
+    })
+    return successResponse(dish)
+  } catch (err) {
+    return errorResponse(err, event)
   }
 }
 
