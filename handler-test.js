@@ -2,14 +2,14 @@ require("dotenv").config()
 const handler = require("./handler")
 
 console.log(
-  handler.createDish(
+  handler.updateFood(
     {
       body: JSON.stringify({
-        name: '粉丝牛腩煲',
-        foods: ['28', '115']
+        name: 'soy',
+        food_category_id: '5'
       }),
       pathParameters: {
-        id: '386',
+        id: '214',
       },
     }, // event
     {}, //content

@@ -92,10 +92,46 @@ module.exports.createDish = async (event) => {
 module.exports.getFoods = async () => {
   try {
     const { Food, FoodCategory } = await connection()
-    const foods = await Food.findAll({ include: FoodCategory })
+    const foods = await Food.findAll({
+      include: FoodCategory,
+      order: [['updated_at', 'DESC']]
+    })
     return successResponse(foods)
   } catch (err) {
     return errorResponse(err)
+  }
+}
+
+module.exports.createFood = async (event) => {
+  try {
+    const { name, food_category_id } = JSON.parse(event.body)
+    const { Food, FoodCategory } = await connection()
+    let food = await Food.create({ name, food_category_id })
+    food = await Food.findOne({
+      where: { id: food.id },
+      include: FoodCategory
+    })
+    return successResponse(food)
+  } catch (err) {
+    return errorResponse(err, event)
+  }
+}
+
+module.exports.updateFood = async (event) => {
+  try {
+    const { name, food_category_id } = JSON.parse(event.body)
+    const { Food, FoodCategory } = await connection()
+    let food = await Food.findOne({
+      where: { id: event.pathParameters.id },
+    })
+    await food.update({ name, food_category_id })
+    food = await Food.findOne({
+      include: FoodCategory,
+      where: { id: food.id }
+    })
+    return successResponse(food)
+  } catch (err) {
+    return errorResponse(err, event)
   }
 }
 

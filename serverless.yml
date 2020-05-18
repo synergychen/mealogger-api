@@ -74,6 +74,22 @@ functions:
           path: foods
           method: get
           cors: true
+  createFood:
+    handler: handler.createFood
+    name: ${self:service}-createFood
+    events:
+      - http:
+          path: foods
+          method: post
+          cors: true
+  updateFood:
+    handler: handler.updateFood
+    name: ${self:service}-updateFood
+    events:
+      - http:
+          path: foods/{id}
+          method: put
+          cors: true
   # Food Category
   getFoodCategories:
     handler: handler.getFoodCategories
