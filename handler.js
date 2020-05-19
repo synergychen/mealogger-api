@@ -27,6 +27,24 @@ module.exports.getRecentMealPlans = async () => {
   }
 }
 
+module.exports.getMealPlansHistory = async () => {
+  const historyLength = 30
+  try {
+    const { MealPlan, Dish, Food } = await connection()
+    const mealPlans = await MealPlan.findAll({
+      include: {
+        model: Dish,
+        include: Food
+      },
+      limit: historyLength,
+      order: [['planned_at', 'DESC']]
+    })
+    return successResponse(mealPlans)
+  } catch (err) {
+    return errorResponse(err)
+  }
+}
+
 module.exports.createDishPlan = async (event) => {
   try {
     const body = JSON.parse(event.body)
@@ -220,20 +238,53 @@ module.exports.getShoppingList = async (event) => {
   }
 }
 
-module.exports.getMealPlansHistory = async () => {
-  const historyLength = 30
+module.exports.createShoppingItem = async (event) => {
   try {
-    const { MealPlan, Dish, Food } = await connection()
-    const mealPlans = await MealPlan.findAll({
+    const shoppingListId = event.pathParameters.id
+    const { ids } = JSON.parse(event.body)
+    const { ShoppingList, ShoppingItem, Food, FoodCategory } = await connection()
+    await ShoppingItem.bulkCreate(
+      ids.map(id => ({ shopping_list_id: shoppingListId, food_id: id }))
+    )
+    const shoppingList = await ShoppingList.findOne({
       include: {
-        model: Dish,
-        include: Food
+        model: ShoppingItem,
+        include: {
+          model: Food,
+          include: FoodCategory,
+        },
       },
-      limit: historyLength,
-      order: [['planned_at', 'DESC']]
+      where: { id: shoppingListId },
     })
-    return successResponse(mealPlans)
+    return successResponse(shoppingList)
   } catch (err) {
-    return errorResponse(err)
+    return errorResponse(err, event)
+  }
+}
+
+module.exports.updateShoppingItem = async (event) => {
+  try {
+    const { completed } = JSON.parse(event.body)
+    const { ShoppingItem } = await connection()
+    let shoppingItem = await ShoppingItem.findOne({
+      where: { id: event.pathParameters.id },
+    })
+    shoppingItem.completed = completed
+    await shoppingItem.save()
+    return successResponse(shoppingItem)
+  } catch (err) {
+    return errorResponse(err, event)
+  }
+}
+
+module.exports.deleteShoppingItem = async (event) => {
+  try {
+    const { ShoppingItem } = await connection()
+    const deleted = await ShoppingItem.destroy({
+      where: { id: event.pathParameters.id }
+    })
+    return successResponse({ deleted })
+  } catch (err) {
+    return errorResponse(err, event)
   }
 }

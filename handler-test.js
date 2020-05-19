@@ -2,14 +2,13 @@ require("dotenv").config()
 const handler = require("./handler")
 
 console.log(
-  handler.deleteFood(
+  handler.createShoppingItem(
     {
       body: JSON.stringify({
-        name: 'soy',
-        food_category_id: '5'
+        ids: ['207']
       }),
       pathParameters: {
-        id: '214',
+        id: '1',
       },
     }, // event
     {}, //content

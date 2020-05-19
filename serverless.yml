@@ -140,3 +140,28 @@ functions:
           path: shopping_lists/{id}
           method: get
           cors: true
+  # Shopping Item
+  createShoppingItem:
+    handler: handler.createShoppingItem
+    name: ${self:service}-createShoppingItem
+    events:
+      - http:
+          path: shopping_lists/{id}/shopping_items
+          method: post
+          cors: true
+  updateShoppingItem:
+    handler: handler.updateShoppingItem
+    name: ${self:service}-updateShoppingItem
+    events:
+      - http:
+          path: shopping_items/{id}
+          method: put
+          cors: true
+  deleteShoppingItem:
+    handler: handler.deleteShoppingItem
+    name: ${self:service}-deleteShoppingItem
+    events:
+      - http:
+          path: shopping_items/{id}
+          method: delete
+          cors: true
