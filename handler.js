@@ -49,16 +49,22 @@ module.exports.createDishPlan = async (event) => {
   try {
     const body = JSON.parse(event.body)
     const { MealPlan, DishPlan, Dish, Food } = await connection()
-    await DishPlan.create(body)
-    // Return new mealPlan instead of dish plan for FE
-    const mealPlan = await MealPlan.findOne({
-      include: {
-        model: Dish,
-        include: Food
-      },
-      where: { id: body.meal_plan_id }
-    })
-    return successResponse(mealPlan)
+    if (body.dishes) {
+      // Bulk create
+      const dishPlans = await DishPlan.bulkCreate(body.dishes)
+      return successResponse(dishPlans)
+    } else {
+      await DishPlan.create(body)
+      // Return new mealPlan instead of dish plan for FE
+      const mealPlan = await MealPlan.findOne({
+        include: {
+          model: Dish,
+          include: Food
+        },
+        where: { id: body.meal_plan_id }
+      })
+      return successResponse(mealPlan)
+    }
   } catch (err) {
     return errorResponse(err, event)
   }
