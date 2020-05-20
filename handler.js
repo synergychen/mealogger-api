@@ -5,14 +5,21 @@ module.exports.getRecentMealPlans = async () => {
   try {
     const today = new Date()
     const yesterday = new Date(today)
-    const dayBeforeYesterday = new Date(today)
+    const tomorrow = new Date(today)
     yesterday.setDate(yesterday.getDate() - 1)
-    dayBeforeYesterday.setDate(dayBeforeYesterday.getDate() - 2)
+    tomorrow.setDate(tomorrow.getDate() + 1)
+    const dates = [yesterday, today, tomorrow].map(date => {
+      const dateStr = date.toLocaleString('en-US', {
+        timeZone: 'America/New_York',
+      })
+      const [month, day, year] = dateStr.split(/[/,]/)
+      return `${year}-${month}-${day}`
+    })
 
     const { MealPlan, Dish, Food } = await connection()
-    await MealPlan.findOrCreate({ where: { planned_at: dayBeforeYesterday } })
-    await MealPlan.findOrCreate({ where: { planned_at: yesterday } })
-    await MealPlan.findOrCreate({ where: { planned_at: today } })
+    for (const date of dates) {
+      await MealPlan.findOrCreate({ where: { planned_at: date } })
+    }
     const mealPlans = await MealPlan.findAll({
       include: {
         model: Dish,
