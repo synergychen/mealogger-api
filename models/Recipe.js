@@ -1,31 +1,31 @@
-const Sequelize = require('sequelize')
-
-module.exports = (sequelize) => {
+module.exports = (sequelize, DataTypes) => {
   const Recipe = sequelize.define(
-    "recipe",
+    'Recipe',
     {
       dish_id: {
-        type: Sequelize.INTEGER,
+        type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: 'Dish',
-          key: 'id'
-        }
+          key: 'id',
+        },
       },
       food_id: {
-        type: Sequelize.INTEGER,
+        type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: 'Food',
-          key: 'id'
-        }
-      }
+          key: 'id',
+        },
+      },
     },
     {
       tableName: 'recipes',
-      underscored: true
+      underscored: true,
     }
   )
+
+  Recipe.associate = (models) => {}
 
   return Recipe
 }

@@ -1,4 +1,4 @@
-# API for meal logging app
+# Serverless API for meal logging app
 
 Serverless API based on:
 

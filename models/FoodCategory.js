@@ -1,20 +1,22 @@
-const Sequelize = require('sequelize')
-
-module.exports = (sequelize) => {
+module.exports = (sequelize, DataTypes) => {
   const FoodCategory = sequelize.define(
-    "food_category",
+    'FoodCategory',
     {
       name: {
-        type: Sequelize.STRING,
-        allowNull: false
+        type: DataTypes.STRING,
+        allowNull: false,
       },
-      color: Sequelize.STRING
+      color: DataTypes.STRING,
     },
     {
       tableName: 'food_categories',
-      underscored: true
+      underscored: true,
     }
   )
+
+  FoodCategory.associate = (models) => {
+    FoodCategory.hasMany(models.Food)
+  }
 
   return FoodCategory
 }

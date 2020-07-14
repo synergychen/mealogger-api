@@ -2,7 +2,7 @@
   "name": "mealogger-serverless-api",
   "version": "1.0.0",
   "description": "",
-  "main": "db.js",
+  "main": "index.js",
   "scripts": {
     "local": "node handler-test.js",
     "deploy": "sls deploy --stage production",
@@ -11,10 +11,9 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "devDependencies": {
-    "dotenv": "^8.2.0"
-  },
+  "devDependencies": {},
   "dependencies": {
+    "dotenv": "^8.2.0",
     "pg": "^8.2.0",
     "sequelize": "^4.43.2"
   }

@@ -1,4 +1,4 @@
-const connection = require("./db")
+const connection = require('./models/index')
 const { successResponse, errorResponse } = require("./handler-helpers")
 
 module.exports.getRecentMealPlans = async () => {
@@ -23,7 +23,11 @@ module.exports.getRecentMealPlans = async () => {
     const mealPlans = await MealPlan.findAll({
       include: {
         model: Dish,
-        include: Food
+        as: 'dishes',
+        include: {
+          model: Food,
+          as: 'foods'
+        }
       },
       limit: 3,
       order: [['planned_at', 'DESC']]
@@ -41,7 +45,11 @@ module.exports.getMealPlansHistory = async () => {
     const mealPlans = await MealPlan.findAll({
       include: {
         model: Dish,
-        include: Food
+        as: 'dishes',
+        include: {
+          model: Food,
+          as: 'foods'
+        }
       },
       limit: historyLength,
       order: [['planned_at', 'DESC']]
@@ -66,7 +74,11 @@ module.exports.createDishPlan = async (event) => {
       const mealPlan = await MealPlan.findOne({
         include: {
           model: Dish,
-          include: Food
+          as: 'dishes',
+          include: {
+            model: Food,
+            as: 'foods'
+          }
         },
         where: { id: body.meal_plan_id }
       })
@@ -91,9 +103,12 @@ module.exports.deleteDishPlan = async (event) => {
 
 module.exports.getDishes = async () => {
   try {
-    const { Dish, Food } = await connection()
+    const { Dish, Food, Recipe } = await connection()
     const dishes = await Dish.findAll({
-      include: [Food],
+      include: [{
+        model: Food,
+        as: 'foods'
+      }],
       order: [['updated_at', 'DESC']]
     })
     return successResponse(dishes)
@@ -111,7 +126,10 @@ module.exports.createDish = async (event) => {
       body.foods.map(food_id => ({ food_id, dish_id: dish.id }))
     )
     dish = await Dish.findOne({
-      include: [Food],
+      include: [{
+        model: Food,
+        as: 'foods'
+      }],
       where: { id: dish.id }
     })
     return successResponse(dish)
@@ -124,7 +142,10 @@ module.exports.getFoods = async () => {
   try {
     const { Food, FoodCategory } = await connection()
     const foods = await Food.findAll({
-      include: FoodCategory,
+      include: [{
+        model: FoodCategory,
+        as: 'food_category'
+      }],
       order: [['updated_at', 'DESC']]
     })
     return successResponse(foods)
@@ -140,7 +161,10 @@ module.exports.createFood = async (event) => {
     let food = await Food.create({ name, food_category_id })
     food = await Food.findOne({
       where: { id: food.id },
-      include: FoodCategory
+      include: [{
+        model: FoodCategory,
+        as: 'food_category'
+      }],
     })
     return successResponse(food)
   } catch (err) {
@@ -157,8 +181,11 @@ module.exports.updateFood = async (event) => {
     })
     await food.update({ name, food_category_id })
     food = await Food.findOne({
-      include: FoodCategory,
-      where: { id: food.id }
+      include: [{
+        model: FoodCategory,
+        as: 'food_category'
+      }],
+      where: { id: food.id },
     })
     return successResponse(food)
   } catch (err) {
@@ -238,9 +265,14 @@ module.exports.getShoppingList = async (event) => {
     const shoppingList = await ShoppingList.findOne({
       include: {
         model: ShoppingItem,
+        as: 'shopping_items',
         include: {
           model: Food,
-          include: FoodCategory,
+          as: 'food',
+          include: {
+            model: FoodCategory,
+            as: 'food_category'
+          },
         },
       },
       where: { id: event.pathParameters.id },
@@ -262,9 +294,14 @@ module.exports.createShoppingItem = async (event) => {
     const shoppingList = await ShoppingList.findOne({
       include: {
         model: ShoppingItem,
+        as: 'shopping_items',
         include: {
           model: Food,
-          include: FoodCategory,
+          as: 'food',
+          include: {
+            model: FoodCategory,
+            as: 'food_category'
+          },
         },
       },
       where: { id: shoppingListId },

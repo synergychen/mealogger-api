@@ -1,17 +1,15 @@
-const Sequelize = require('sequelize')
-
-module.exports = (sequelize) => {
+module.exports = (sequelize, DataTypes) => {
   const DishPlan = sequelize.define(
-    'dish_plan',
+    'DishPlan',
     {
       id: {
-        type: Sequelize.INTEGER,
+        type: DataTypes.INTEGER,
         primaryKey: true,
-        autoIncrement: true
+        autoIncrement: true,
       },
-      meal: Sequelize.STRING,
+      meal: DataTypes.STRING,
       meal_plan_id: {
-        type: Sequelize.INTEGER,
+        type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: 'MealPlan',
@@ -19,7 +17,7 @@ module.exports = (sequelize) => {
         },
       },
       dish_id: {
-        type: Sequelize.INTEGER,
+        type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: 'Dish',
@@ -32,6 +30,8 @@ module.exports = (sequelize) => {
       underscored: true,
     }
   )
+
+  DishPlan.associate = (models) => {}
 
   return DishPlan
 }

@@ -1,11 +1,9 @@
-const Sequelize = require("sequelize")
-
-module.exports = (sequelize) => {
+module.exports = (sequelize, DataTypes) => {
   const MealPlan = sequelize.define(
-    "meal_plan",
+    'MealPlan',
     {
       planned_at: {
-        type: Sequelize.DATE,
+        type: DataTypes.DATE,
         allowNull: false,
       },
     },
@@ -14,6 +12,14 @@ module.exports = (sequelize) => {
       underscored: true,
     }
   )
+
+  MealPlan.associate = (models) => {
+    MealPlan.belongsToMany(models.Dish, {
+      through: models.DishPlan,
+      as: 'dishes',
+      foreignKey: 'meal_plan_id'
+    })
+  }
 
   return MealPlan
 }

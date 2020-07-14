@@ -1,17 +1,15 @@
-const Sequelize = require('sequelize')
-
-module.exports = (sequelize) => {
+module.exports = (sequelize, DataTypes) => {
   const ShoppingItem = sequelize.define(
-    'shopping_item',
+    'ShoppingItem',
     {
       id: {
-        type: Sequelize.INTEGER,
+        type: DataTypes.INTEGER,
         primaryKey: true,
-        autoIncrement: true
+        autoIncrement: true,
       },
       completed: {
-        type: Sequelize.BOOLEAN,
-        defaultValue: false
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
       },
     },
     {
@@ -19,6 +17,12 @@ module.exports = (sequelize) => {
       underscored: true,
     }
   )
+
+  ShoppingItem.associate = (models) => {
+    ShoppingItem.belongsTo(models.Food, {
+      as: 'food'
+    })
+  }
 
   return ShoppingItem
 }
