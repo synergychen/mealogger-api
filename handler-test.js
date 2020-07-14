@@ -23,6 +23,24 @@ const getDishes = () => {
   )
 }
 
+const updateDish = () => {
+  handler.updateDish(
+    {
+      body: JSON.stringify({
+        steps: []
+      }),
+      pathParameters: {
+        id: 200,
+      },
+    }, // event
+    {}, //content
+    function (data, ss) {
+      //callback function with two arguments
+      console.log(data, ss)
+    }
+  )
+}
+
 const getFoods = () => {
   handler.getFoods (
     {}, // event
@@ -74,6 +92,7 @@ const getMealPlansHistory = () => {
 // getRecentMealPlans()
 // getDishes()
 // getFoods()
+updateDish()
 // getFoodCategories()
 // getShoppingList()
-getMealPlansHistory()
+// getMealPlansHistory()

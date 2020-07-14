@@ -1,6 +1,7 @@
 const connection = require('./models/index')
 const { successResponse, errorResponse } = require("./handler-helpers")
 
+// Meal Plan
 module.exports.getRecentMealPlans = async () => {
   try {
     const today = new Date()
@@ -60,6 +61,7 @@ module.exports.getMealPlansHistory = async () => {
   }
 }
 
+// Dish Plan
 module.exports.createDishPlan = async (event) => {
   try {
     const body = JSON.parse(event.body)
@@ -101,6 +103,7 @@ module.exports.deleteDishPlan = async (event) => {
   }
 }
 
+// Dish
 module.exports.getDishes = async () => {
   try {
     const { Dish, Food, Recipe } = await connection()
@@ -138,6 +141,28 @@ module.exports.createDish = async (event) => {
   }
 }
 
+module.exports.updateDish = async (event) => {
+  try {
+    const { steps } = JSON.parse(event.body)
+    const { Dish, Food } = await connection()
+    let dish = await Dish.findOne({
+      where: { id: event.pathParameters.id },
+    })
+    await dish.update({ steps })
+    dish = await Dish.findOne({
+      include: [{
+        model: Food,
+        as: 'foods'
+      }],
+      where: { id: dish.id }
+    })
+    return successResponse(dish)
+  } catch (err) {
+    return errorResponse(err, event)
+  }
+}
+
+// Food
 module.exports.getFoods = async () => {
   try {
     const { Food, FoodCategory } = await connection()
@@ -205,6 +230,7 @@ module.exports.deleteFood = async (event) => {
   }
 }
 
+// Food Category
 module.exports.getFoodCategories = async () => {
   try {
     const { FoodCategory } = await connection()
@@ -254,6 +280,7 @@ module.exports.deleteFoodCategory = async (event) => {
   }
 }
 
+// Shopping List and Item
 module.exports.getShoppingList = async (event) => {
   try {
     const {
