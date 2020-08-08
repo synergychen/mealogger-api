@@ -5,6 +5,8 @@ provider:
   name: aws
   runtime: nodejs12.x
   region: us-east-1
+  memorySize: 128 # optional, in MB, default is 1024
+  timeout: 6 # optional, in seconds, default is 6
   httpApi:
     cors: true
   environment:
