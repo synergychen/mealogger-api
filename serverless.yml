@@ -7,6 +7,8 @@ provider:
   region: us-east-1
   memorySize: 128 # optional, in MB, default is 1024
   timeout: 6 # optional, in seconds, default is 6
+  deploymentBucket:
+    name: ${self:custom.secrets.S3_DEPLOYMENT_BUCKET}
   httpApi:
     cors: true
   environment:
